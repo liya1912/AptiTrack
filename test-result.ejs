@@ -1,0 +1,104 @@
+<!-- views/student/test-result.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Result - AptiTrack</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">AptiTrack</div>
+    <div class="nav-links">
+      <a href="/student/dashboard">Dashboard</a>
+      <a href="/student/available-tests">Tests</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="result-container">
+      <div class="result-header">
+        <% if (result.isPassed) { %>
+          <h1>Congratulations! 🎉</h1>
+        <% } else { %>
+          <h1>Test Completed!</h1>
+        <% } %>
+        <p class="test-title"><%= test.title %></p>
+      </div>
+
+      <div class="score-card">
+        <div class="score-circle <%= result.isPassed ? 'passed' : 'failed' %>">
+          <div class="score-number">
+            <%= percentage %>%
+          </div>
+          <div class="score-label"><%= result.isPassed ? 'Passed' : 'Failed' %></div>
+        </div>
+        
+        <div class="score-details">
+          <div class="detail-row">
+            <span class="detail-label">Marks Obtained:</span>
+            <span class="detail-value"><%= result.marksObtained %> / <%= result.totalMarks %></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Passing Marks:</span>
+            <span class="detail-value"><%= test.passingMarks %></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Correct Answers:</span>
+            <span class="detail-value correct">
+              <%= result.answers.filter(a => a.isCorrect).length %>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Wrong Answers:</span>
+            <span class="detail-value wrong">
+              <%= result.answers.filter(a => !a.isCorrect).length %>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Total Questions:</span>
+            <span class="detail-value"><%= result.answers.length %></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Time Taken:</span>
+            <span class="detail-value">
+              <%= result.timeTaken %> minutes
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="performance-message">
+        <% if (percentage >= 80) { %>
+          <div class="message excellent">
+            <h3>🌟 Excellent Performance!</h3>
+            <p>Outstanding work! You've demonstrated excellent understanding of the subject.</p>
+          </div>
+        <% } else if (percentage >= 60) { %>
+          <div class="message good">
+            <h3>👍 Good Job!</h3>
+            <p>Well done! You have a good grasp of the material. Keep up the good work!</p>
+          </div>
+        <% } else if (percentage >= 40) { %>
+          <div class="message average">
+            <h3>📚 Room for Improvement</h3>
+            <p>You're on the right track. With more practice, you'll do even better next time!</p>
+          </div>
+        <% } else { %>
+          <div class="message needs-work">
+            <h3>💪 Keep Learning!</h3>
+            <p>Don't be discouraged. Review the material and try similar practice tests to improve.</p>
+          </div>
+        <% } %>
+      </div>
+
+      <div class="action-buttons">
+        <a href="/student/available-tests" class="btn btn-primary">View More Tests</a>
+        <a href="/student/dashboard" class="btn btn-secondary">Go to Dashboard</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

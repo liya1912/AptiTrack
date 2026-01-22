@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - AptiTrack</title>
+    <!--<link rel="stylesheet" href="/css/style.css">-->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+        }
+        .navbar {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            font-size: 1.5rem;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .welcome-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 1rem;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body class="dashboard-page">
+    <nav class="navbar">
+        <h1>AptiTrack - Student Dashboard</h1>
+        <div>
+            <span>Welcome, <%= user.name %> | Semester: <%= user.semester || 'N/A' %></span>
+            <a href="/auth/logout">Logout</a>
+           <!--<a href="/student/available-tests" class="btn btn-primary">
+  📝 View Available Tests
+</a>-->
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome-card">
+            <h2>Welcome, <%= user.name %>!</h2>
+            <p>Access your aptitude tests and track your performance.</p>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <h3>📝 Available Tests</h3>
+                <p>View and attempt scheduled tests</p>
+                <a href="/student/available-tests" class="btn">View Tests</a>
+                <!--<a href="/tests/available" class="btn">View Tests</a>-->
+            </div>
+
+            <div class="card">
+                <h3>📊 My Results</h3>
+                <p>Check your test scores and rankings</p>
+                <a href="/student/my-results" class="btn btn-primary">📊 My Results</a>
+                <!--<a href="/student/results" class="btn">View Results</a>-->
+            </div>
+
+            <div class="card">
+                <h3>📈 Performance Analytics</h3>
+                <p>Track your progress over time</p>
+                <a href="/student/analytics" class="btn">View Analytics</a>
+            </div>
+
+            <div class="card">
+                <h3>👤 My Profile</h3>
+                <p>Update your profile information</p>
+                <a href="/student/profile" class="btn">View Profile</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

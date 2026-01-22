@@ -1,0 +1,321 @@
+<!-- views/student/take-test.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= test.title %> - AptiTrack</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">AptiTrack</div>
+    <div class="timer-display" id="timer">
+      <span class="timer-icon">⏱️</span>
+      <span id="timer-text">Loading...</span>
+    </div>
+  </nav>
+
+  <div class="container test-container">
+    <div class="test-header-info">
+      <h1><%= test.title %></h1>
+      <div class="test-meta">
+        <span><strong>Category:</strong> <%= test.category %></span>
+        <span><strong>Questions:</strong> <%= test.questions.length %></span>
+        <span><strong>Duration:</strong> <%= test.duration %> minutes</span>
+        <span><strong>Total Marks:</strong> <%= test.totalMarks %></span>
+      </div>
+      <% if (test.instructions) { %>
+        <div class="instructions">
+          <strong>Instructions:</strong> <%= test.instructions %>
+        </div>
+      <% } %>
+    </div>
+
+    <form id="test-form" method="POST" action="/student/submit-test/<%= test._id %>">
+      <input type="hidden" name="timeTaken" id="timeTaken">
+      
+      <div class="questions-container">
+        <% test.questions.forEach((question, index) => { %>
+          <div class="question-card" id="question-<%= index %>">
+            <div class="question-header-row">
+              <div class="question-number">Question <%= index + 1 %> of <%= test.questions.length %></div>
+              <div class="question-marks">Marks: <%= question.marks || 1 %></div>
+            </div>
+            <div class="question-text"><%= question.questionText %></div>
+            
+            <div class="options-container">
+              <% question.options.forEach((option) => { %>
+                <label class="option-label">
+                  <input 
+                    type="radio" 
+                    name="answers[<%= index %>]" 
+                    value="<%= option.optionKey %>"
+                    required
+                  >
+                  <span class="option-text">
+                    <span class="option-marker"><%= option.optionKey %>.</span>
+                    <%= option.optionText %>
+                  </span>
+                </label>
+              <% }); %>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+
+      <div class="submit-container">
+        <button type="button" class="btn btn-secondary" onclick="confirmCancel()">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="submit-btn">Submit Test</button>
+      </div>
+    </form>
+  </div>
+
+  <style>
+    .test-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .timer-display {
+      background: #fff3cd;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      color: #856404;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .timer-display.warning {
+      background: #f8d7da;
+      color: #721c24;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .test-header-info {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .test-header-info h1 {
+      margin: 0 0 12px 0;
+      color: #333;
+    }
+
+    .test-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+
+    .instructions {
+      margin-top: 16px;
+      padding: 12px;
+      background: #f8f9fa;
+      border-left: 4px solid #1976d2;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .questions-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .question-card {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .question-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .question-number {
+      color: #1976d2;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+    }
+
+    .question-marks {
+      color: #666;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: #f5f5f5;
+      padding: 4px 12px;
+      border-radius: 12px;
+    }
+
+    .question-text {
+      font-size: 1.1rem;
+      color: #333;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .option-label:hover {
+      background: #f5f5f5;
+      border-color: #1976d2;
+    }
+
+    .option-label input[type="radio"] {
+      margin-right: 12px;
+      cursor: pointer;
+    }
+
+    .option-label input[type="radio"]:checked + .option-text {
+      color: #1976d2;
+      font-weight: 600;
+    }
+
+    .option-label:has(input:checked) {
+      background: #e3f2fd;
+      border-color: #1976d2;
+    }
+
+    .option-text {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .option-marker {
+      font-weight: 700;
+      color: #666;
+      min-width: 28px;
+    }
+
+    .submit-container {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 32px;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+  </style>
+
+  <script>
+    // Timer functionality
+    const durationMinutes = <%= test.duration %>;
+    let timeRemaining = durationMinutes * 60; // Convert to seconds
+    const startTime = Date.now();
+    let timerInterval;
+
+    function updateTimer() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const timerText = document.getElementById('timer-text');
+      const timerDisplay = document.getElementById('timer');
+      
+      timerText.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      
+      // Warning when 5 minutes or less
+      if (timeRemaining <= 300) {
+        timerDisplay.classList.add('warning');
+      }
+      
+      // Auto-submit when time runs out
+      if (timeRemaining <= 0) {
+        clearInterval(timerInterval);
+        alert('Time is up! Your test will be submitted automatically.');
+        document.getElementById('test-form').submit();
+        return;
+      }
+      
+      timeRemaining--;
+    }
+
+    // Start timer
+    timerInterval = setInterval(updateTimer, 1000);
+    updateTimer(); // Initial call
+
+    // Handle form submission
+    document.getElementById('test-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Calculate time taken in seconds
+      const timeTaken = Math.floor((Date.now() - startTime) / 1000);
+      document.getElementById('timeTaken').value = timeTaken;
+      
+      // Confirm submission
+      if (confirm('Are you sure you want to submit your test? You cannot change your answers after submission.')) {
+        clearInterval(timerInterval);
+        window.removeEventListener('beforeunload', beforeUnloadHandler);
+        this.submit();
+      }
+    });
+
+    // Cancel button handler
+    function confirmCancel() {
+      if (confirm('Are you sure you want to cancel? All your progress will be lost.')) {
+        clearInterval(timerInterval);
+        window.removeEventListener('beforeunload', beforeUnloadHandler);
+        window.location.href = '/student/available-tests';
+      }
+    }
+
+    // Warn before leaving page
+    function beforeUnloadHandler(e) {
+      e.preventDefault();
+      e.returnValue = '';
+      return '';
+    }
+    
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+
+    // Prevent back button during test
+    history.pushState(null, null, location.href);
+    window.addEventListener('popstate', function() {
+      if (confirm('Are you sure you want to leave the test? Your progress will be lost.')) {
+        clearInterval(timerInterval);
+        window.removeEventListener('beforeunload', beforeUnloadHandler);
+        history.back();
+      } else {
+        history.pushState(null, null, location.href);
+      }
+    });
+  </script>
+</body>
+</html>

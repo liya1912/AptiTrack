@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Test - AptiTrack</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .form-title {
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 2rem;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .form-group-full {
+            grid-column: 1 / -1;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        .required {
+            color: #f5576c;
+        }
+    </style>
+</head>
+<body class="dashboard-page">
+    <nav class="navbar">
+        <h1>📝 Create New Test</h1>
+        <div class="navbar-right">
+            <a href="/admin/dashboard">← Back to Dashboard</a>
+            <span>Welcome, <strong><%= user.name %></strong></span>
+            <a href="/auth/logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="form-container">
+            <h2 class="form-title">Create Aptitude Test</h2>
+            
+            <form action="/tests/create" method="POST" id="createTestForm">
+                <div class="form-grid">
+                    <!-- Test Title -->
+                    <div class="form-group form-group-full">
+                        <label for="title">Test Title <span class="required">*</span></label>
+                        <input 
+                            type="text" 
+                            id="title" 
+                            name="title" 
+                            placeholder="e.g., Quantitative Aptitude - Semester 5"
+                            required
+                        >
+                    </div>
+
+                    <!-- Category -->
+                    <div class="form-group">
+                        <label for="category">Category <span class="required">*</span></label>
+                        <select id="category" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="Quantitative Aptitude">Quantitative Aptitude</option>
+                            <option value="Logical Reasoning">Logical Reasoning</option>
+                            <option value="Verbal Ability">Verbal Ability</option>
+                            <option value="Technical Skills">Technical Skills</option>
+                            <option value="Mixed">Mixed</option>
+                        </select>
+                    </div>
+
+                    <!-- Semester -->
+                    <div class="form-group">
+                        <label for="semester">Semester <span class="required">*</span></label>
+                        <select id="semester" name="semester" required>
+                            <option value="">Select Semester</option>
+                            <option value="1">1st Semester</option>
+                            <option value="2">2nd Semester</option>
+                            <option value="3">3rd Semester</option>
+                            <option value="4">4th Semester</option>
+                            <option value="5">5th Semester</option>
+                            <option value="6">6th Semester</option>
+                            <option value="7">7th Semester</option>
+                            <option value="8">8th Semester</option>
+                        </select>
+                    </div>
+
+                    <!-- Duration -->
+                    <div class="form-group">
+                        <label for="duration">Duration (minutes) <span class="required">*</span></label>
+                        <input 
+                            type="number" 
+                            id="duration" 
+                            name="duration" 
+                            placeholder="e.g., 60"
+                            min="1"
+                            required
+                        >
+                    </div>
+
+                    <!-- Total Marks -->
+                    <div class="form-group">
+                        <label for="totalMarks">Total Marks <span class="required">*</span></label>
+                        <input 
+                            type="number" 
+                            id="totalMarks" 
+                            name="totalMarks" 
+                            placeholder="e.g., 100"
+                            min="1"
+                            required
+                        >
+                    </div>
+
+                    <!-- Passing Marks -->
+                    <div class="form-group">
+                        <label for="passingMarks">Passing Marks <span class="required">*</span></label>
+                        <input 
+                            type="number" 
+                            id="passingMarks" 
+                            name="passingMarks" 
+                            placeholder="e.g., 40"
+                            min="1"
+                            required
+                        >
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="form-group">
+                        <label for="startDate">Start Date & Time <span class="required">*</span></label>
+                        <input 
+                            type="datetime-local" 
+                            id="startDate" 
+                            name="startDate" 
+                            required
+                        >
+                    </div>
+
+                    <!-- End Date -->
+                    <div class="form-group">
+                        <label for="endDate">End Date & Time <span class="required">*</span></label>
+                        <input 
+                            type="datetime-local" 
+                            id="endDate" 
+                            name="endDate" 
+                            required
+                        >
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group form-group-full">
+                        <label for="description">Description</label>
+                        <textarea 
+                            id="description" 
+                            name="description" 
+                            placeholder="Brief description of the test..."
+                        ></textarea>
+                    </div>
+
+                    <!-- Instructions -->
+                    <div class="form-group form-group-full">
+                        <label for="instructions">Instructions</label>
+                        <textarea 
+                            id="instructions" 
+                            name="instructions" 
+                            placeholder="Test instructions for students..."
+                        >1. Read all questions carefully before answering.
+2. All questions are mandatory.
+3. There is no negative marking.
+4. Once submitted, answers cannot be changed.
+5. Ensure stable internet connection throughout the test.</textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Create Test & Add Questions</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Set minimum date to today
+        const now = new Date();
+        const dateStr = now.toISOString().slice(0, 16);
+        document.getElementById('startDate').min = dateStr;
+        document.getElementById('endDate').min = dateStr;
+
+        // Validate end date is after start date
+        document.getElementById('createTestForm').addEventListener('submit', function(e) {
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+
+            if (endDate <= startDate) {
+                e.preventDefault();
+                alert('End date must be after start date');
+                return false;
+            }
+
+            const passingMarks = parseInt(document.getElementById('passingMarks').value);
+            const totalMarks = parseInt(document.getElementById('totalMarks').value);
+
+            if (passingMarks > totalMarks) {
+                e.preventDefault();
+                alert('Passing marks cannot be greater than total marks');
+                return false;
+            }
+        });
+    </script>
+</body>
+</html>

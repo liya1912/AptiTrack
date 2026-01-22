@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Questions - AptiTrack</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .question-form-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-info-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .test-info-banner h3 {
+            margin: 0 0 0.5rem 0;
+        }
+
+        .test-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .form-section h4 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .option-input {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .option-input label {
+            min-width: 60px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .option-input input {
+            flex: 1;
+        }
+
+        .correct-answer-section {
+            background: #e8f5e9;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #38ef7d;
+        }
+
+        .btn-add-question {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .btn-add-question:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(56, 239, 125, 0.4);
+        }
+
+        .btn-finish {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-finish:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .questions-list {
+            margin-top: 2rem;
+        }
+
+        .question-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .question-card:hover {
+            border-color: #667eea;
+        }
+
+        .question-number {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #667eea;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .question-text {
+            margin: 1rem 0;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .question-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .option-item {
+            padding: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .option-item.correct {
+            background: #e8f5e9;
+            border-left: 3px solid #38ef7d;
+            font-weight: 600;
+        }
+
+        .question-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .btn-delete {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #f5576c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .btn-delete:hover {
+            background: #d63447;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #38ef7d;
+        }
+
+        .alert-error {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #f5576c;
+        }
+    </style>
+</head>
+<body class="dashboard-page">
+    <nav class="navbar">
+        <h1>❓ Add Questions</h1>
+        <div class="navbar-right">
+            <a href="/admin/dashboard">← Back to Dashboard</a>
+            <span>Welcome, <strong><%= user.name %></strong></span>
+            <a href="/auth/logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="question-form-container">
+            <!-- Test Information Banner -->
+            <div class="test-info-banner">
+                <h3><%= test.title %></h3>
+                <div class="test-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Category</span>
+                        <span class="stat-value"><%= test.category %></span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Semester</span>
+                        <span class="stat-value"><%= test.semester %></span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Duration</span>
+                        <span class="stat-value"><%= test.duration %> min</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Questions Added</span>
+                        <span class="stat-value" id="questionCount"><%= test.questions.length %></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alert Messages -->
+            <div id="alertContainer"></div>
+
+            <!-- Add Question Form -->
+            <form id="addQuestionForm">
+                <div class="form-section">
+                    <h4>Question Details</h4>
+
+                    <!-- Question Text -->
+                    <div class="form-group">
+                        <label for="questionText">Question Text *</label>
+                        <textarea 
+                            id="questionText" 
+                            name="questionText" 
+                            placeholder="Enter the question here..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <!-- Question Type and Marks -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="questionType">Question Type *</label>
+                            <select id="questionType" name="questionType" required>
+                                <option value="multiple-choice">Multiple Choice</option>
+                                <option value="true-false">True/False</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="marks">Marks *</label>
+                            <input 
+                                type="number" 
+                                id="marks" 
+                                name="marks" 
+                                min="1" 
+                                value="1"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="difficultyLevel">Difficulty *</label>
+                            <select id="difficultyLevel" name="difficultyLevel" required>
+                                <option value="Easy">Easy</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="Hard">Hard</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="form-group">
+                        <label for="category">Category *</label>
+                        <select id="category" name="category" required>
+                            <option value="Quantitative Aptitude">Quantitative Aptitude</option>
+                            <option value="Logical Reasoning">Logical Reasoning</option>
+                            <option value="Verbal Ability">Verbal Ability</option>
+                            <option value="Technical Skills">Technical Skills</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Options Section -->
+                <div class="form-section" id="optionsSection">
+                    <h4>Answer Options</h4>
+                    <div class="options-grid">
+                        <div class="option-input">
+                            <label>Option A:</label>
+                            <input 
+                                type="text" 
+                                id="optionA" 
+                                placeholder="Enter option A"
+                                required
+                            >
+                        </div>
+                        <div class="option-input">
+                            <label>Option B:</label>
+                            <input 
+                                type="text" 
+                                id="optionB" 
+                                placeholder="Enter option B"
+                                required
+                            >
+                        </div>
+                        <div class="option-input">
+                            <label>Option C:</label>
+                            <input 
+                                type="text" 
+                                id="optionC" 
+                                placeholder="Enter option C"
+                                required
+                            >
+                        </div>
+                        <div class="option-input">
+                            <label>Option D:</label>
+                            <input 
+                                type="text" 
+                                id="optionD" 
+                                placeholder="Enter option D"
+                                required
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Correct Answer Section -->
+                <div class="form-section correct-answer-section">
+                    <h4>Correct Answer</h4>
+                    <div class="form-group">
+                        <label for="correctAnswer">Select Correct Answer *</label>
+                        <select id="correctAnswer" name="correctAnswer" required>
+                            <option value="">Select the correct answer</option>
+                            <option value="A">Option A</option>
+                            <option value="B">Option B</option>
+                            <option value="C">Option C</option>
+                            <option value="D">Option D</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Explanation (Optional) -->
+                <div class="form-section">
+                    <h4>Explanation (Optional)</h4>
+                    <div class="form-group">
+                        <label for="explanation">Explanation</label>
+                        <textarea 
+                            id="explanation" 
+                            name="explanation" 
+                            placeholder="Provide an explanation for the correct answer (optional)..."
+                        ></textarea>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <button type="submit" class="btn-add-question">
+                    ➕ Add Question
+                </button>
+            </form>
+
+            <!-- Added Questions List -->
+            <div class="questions-list" id="questionsList">
+                <h3 style="color: #2c3e50; margin-top: 2rem;">Added Questions (<span id="totalQuestions"><%= test.questions.length %></span>)</h3>
+                
+                <% if (test.questions.length > 0) { %>
+                    <% test.questions.forEach((question, index) => { %>
+                        <div class="question-card">
+                            <div class="question-number">Question <%= index + 1 %></div>
+                            <div class="question-text"><%= question.questionText %></div>
+                            
+                            <div class="question-options">
+                                <% question.options.forEach(option => { %>
+                                    <div class="option-item <%= option.optionKey === question.correctAnswer ? 'correct' : '' %>">
+                                        <strong><%= option.optionKey %>:</strong> <%= option.optionText %>
+                                        <% if (option.optionKey === question.correctAnswer) { %> ✓<% } %>
+                                    </div>
+                                <% }); %>
+                            </div>
+                            
+                            <div class="question-meta">
+                                <span><strong>Marks:</strong> <%= question.marks %></span>
+                                <span><strong>Category:</strong> <%= question.category %></span>
+                                <span><strong>Difficulty:</strong> <%= question.difficultyLevel %></span>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p style="text-align: center; color: #999; padding: 2rem;">No questions added yet. Add your first question above.</p>
+                <% } %>
+            </div>
+
+            <!-- Finish Button -->
+            <% if (test.questions.length > 0) { %>
+                <button onclick="finishTest()" class="btn-finish" style="margin-top: 2rem;">
+                    ✅ Finish & Publish Test
+                </button>
+            <% } %>
+        </div>
+    </div>
+
+    <script>
+        const testId = '<%= test._id %>';
+        let questionCount = <%= test.questions.length %>;
+
+        // Handle question type change
+        document.getElementById('questionType').addEventListener('change', function() {
+            const optionsSection = document.getElementById('optionsSection');
+            const correctAnswerSelect = document.getElementById('correctAnswer');
+            
+            if (this.value === 'true-false') {
+                optionsSection.style.display = 'none';
+                correctAnswerSelect.innerHTML = `
+                    <option value="">Select the correct answer</option>
+                    <option value="True">True</option>
+                    <option value="False">False</option>
+                `;
+                
+                // Remove required from option inputs
+                ['A', 'B', 'C', 'D'].forEach(opt => {
+                    document.getElementById('option' + opt).required = false;
+                });
+            } else {
+                optionsSection.style.display = 'block';
+                correctAnswerSelect.innerHTML = `
+                    <option value="">Select the correct answer</option>
+                    <option value="A">Option A</option>
+                    <option value="B">Option B</option>
+                    <option value="C">Option C</option>
+                    <option value="D">Option D</option>
+                `;
+                
+                // Add required to option inputs
+                ['A', 'B', 'C', 'D'].forEach(opt => {
+                    document.getElementById('option' + opt).required = true;
+                });
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('addQuestionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const questionType = document.getElementById('questionType').value;
+            const questionText = document.getElementById('questionText').value;
+            const marks = document.getElementById('marks').value;
+            const category = document.getElementById('category').value;
+            const difficultyLevel = document.getElementById('difficultyLevel').value;
+            const correctAnswer = document.getElementById('correctAnswer').value;
+            const explanation = document.getElementById('explanation').value;
+
+            let options = [];
+            
+            if (questionType === 'multiple-choice') {
+                options = [
+                    { optionKey: 'A', optionText: document.getElementById('optionA').value },
+                    { optionKey: 'B', optionText: document.getElementById('optionB').value },
+                    { optionKey: 'C', optionText: document.getElementById('optionC').value },
+                    { optionKey: 'D', optionText: document.getElementById('optionD').value }
+                ];
+            } else {
+                options = [
+                    { optionKey: 'True', optionText: 'True' },
+                    { optionKey: 'False', optionText: 'False' }
+                ];
+            }
+
+            try {
+                const response = await fetch(`/tests/${testId}/add-question`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        questionText,
+                        questionType,
+                        options: JSON.stringify(options),
+                        correctAnswer,
+                        marks,
+                        category,
+                        difficultyLevel,
+                        explanation
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('Question added successfully!', 'success');
+                    
+                    // Reset form
+                    document.getElementById('addQuestionForm').reset();
+                    
+                    // Reload page to show new question
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showAlert('Error: ' + data.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('Failed to add question. Please try again.', 'error');
+            }
+        });
+
+        // Show alert message
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+            
+            alertContainer.innerHTML = `
+                <div class="alert ${alertClass}">
+                    ${message}
+                </div>
+            `;
+
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 3000);
+        }
+
+        // Finish test
+        function finishTest() {
+            if (confirm('Are you sure you want to finish and publish this test? Students will be able to see and attempt this test.')) {
+                alert('Test published successfully! Students can now attempt this test.');
+                window.location.href = '/admin/dashboard';
+            }
+        }
+    </script>
+</body>
+</html>
