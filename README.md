@@ -33,7 +33,6 @@ Database: MongoDB
 ## Student Details
 Name: Liya Sara Joseph
 Email: 
-S4-MCA
 
 ## Guide Details
-Guide Name: ________Er Anoopa Ravindran ____________
+Guide Name: Er Anoopa Ravindran
